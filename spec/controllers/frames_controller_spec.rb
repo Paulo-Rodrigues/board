@@ -44,7 +44,7 @@ describe FramesController, type: :controller do
 
       post :create, params: { frame: params }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:errors]).to include("X can't be blank")
     end
 
@@ -62,7 +62,7 @@ describe FramesController, type: :controller do
 
       post :create, params: { frame: params }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:errors]).to include("Circles x can't be blank")
     end
   end
@@ -116,7 +116,7 @@ describe FramesController, type: :controller do
 
       delete :destroy, params: { id: frame_with_circles.id }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:error]).to eq("Cannot delete frame with associated circles")
     end
 

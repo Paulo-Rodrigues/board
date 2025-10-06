@@ -80,7 +80,7 @@ RSpec.describe "Frames::Circles", type: :request do
         let(:circle) { { circle: { x: -1, diameter: 2 } } }
 
         run_test! do |response|
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(json_response).to include(:errors)
           expect(json_response[:errors]).to be_an(Array)
         end
@@ -101,7 +101,7 @@ RSpec.describe "Frames::Circles", type: :request do
         let(:circle) { { circle: { x: 6, y: 0, diameter: 2 } } }
 
         run_test! do |response|
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(json_response).to include(:errors)
           expect(json_response[:errors]).to include(a_string_matching(/Circle exceeds frame boundaries/))
         end
@@ -123,7 +123,7 @@ RSpec.describe "Frames::Circles", type: :request do
         let(:circle) { { circle: { x: 2.0, y: 2.0, diameter: 2.0 } } }
 
         run_test! do |response|
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(json_response).to include(:errors)
           expect(json_response[:errors]).to include(a_string_matching(/Circle touches another circle|overlap/i))
         end

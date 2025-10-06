@@ -6,7 +6,7 @@ class Frames::CirclesController < ApplicationController
     if circle.save
       render json: { frame: frame.as_json(include: :circles) }, status: :created
     else
-      render json: { errors: circle.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: circle.errors.full_messages }, status: :unprocessable_content
     end
   end
 

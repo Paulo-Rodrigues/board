@@ -127,7 +127,7 @@ RSpec.describe "Circles API", type: :request do
         let(:circle) { { circle: { diameter: nil } } }
 
         run_test! do |response|
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(json_response[:errors]).to include(a_string_matching(/Diameter|can"t be blank/i))
         end
       end

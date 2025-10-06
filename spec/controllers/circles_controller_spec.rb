@@ -49,7 +49,7 @@ describe CirclesController, type: :controller do
 
       put :update, params: { id: circle1.id, circle: { diameter: nil } }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:errors]).to include("Diameter can't be blank")
     end
   end

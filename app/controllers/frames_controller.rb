@@ -5,7 +5,7 @@ class FramesController < ApplicationController
     if frame.save
       render json: { frame: frame }, status: :created
     else
-      render json: { errors: frame.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: frame.errors.full_messages }, status: :unprocessable_content
     end
   end
 
@@ -25,7 +25,7 @@ class FramesController < ApplicationController
     if frame.destroy
       head :no_content
     else
-      render json: { error: "Cannot delete frame with associated circles" }, status: :unprocessable_entity
+      render json: { error: "Cannot delete frame with associated circles" }, status: :unprocessable_content
     end
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Frame not found" }, status: :not_found

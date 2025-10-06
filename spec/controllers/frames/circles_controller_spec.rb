@@ -14,14 +14,14 @@ describe Frames::CirclesController, type: :controller do
     it "cannot create a circle with invalid parameters" do
       post :create, params: { frame_id: frame.id, circle: { x: -1, diameter: 2 } }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:errors]).to include("Y can't be blank")
     end
 
     it "cannot create a circle outside the frame boundaries" do
       post :create, params: { frame_id: frame.id, circle: { x: 6, y: 0, diameter: 2 } }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:errors]).to include("Circle exceeds frame boundaries")
     end
 
@@ -30,7 +30,7 @@ describe Frames::CirclesController, type: :controller do
 
       post :create, params: { frame_id: frame.id, circle: { x: 2, y: 2, diameter: 2 } }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_response[:errors]).to include("Circle touches another circle or overlap")
     end
   end
