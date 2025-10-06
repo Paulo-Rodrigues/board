@@ -6,6 +6,13 @@ class Circle < ApplicationRecord
   validate :fits_within_frame
   validate :does_not_touch_other_circles
 
+  scope :within_area, -> (center_x:, center_y:, radius:) {
+    where(
+      "SQRT(POW(x - ?, 2) + POW(y - ?, 2)) + (diameter / 2.0) <= ?",
+      center_x, center_y, radius
+    )
+  }
+
   def radius = diameter / 2.0
 
   private

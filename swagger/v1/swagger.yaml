@@ -4,6 +4,67 @@ info:
   title: API V1
   version: v1
 paths:
+  "/circles":
+    get:
+      summary: Lists circles within a given radius
+      tags:
+      - Circles
+      parameters:
+      - name: center_x
+        in: query
+        required: true
+        description: X coordinate of the center point
+        schema:
+          type: number
+      - name: center_y
+        in: query
+        required: true
+        description: Y coordinate of the center point
+        schema:
+          type: number
+      - name: radius
+        in: query
+        required: true
+        description: Search radius in centimeters
+        schema:
+          type: number
+      - name: frame_id
+        in: query
+        required: false
+        description: Optional Frame ID to filter circles
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: list of circles returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  circles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        x:
+                          type: string
+                        "y":
+                          type: string
+                        diameter:
+                          type: string
+                        frame_id:
+                          type: integer
+                      required:
+                      - id
+                      - x
+                      - "y"
+                      - diameter
+                      - frame_id
+                required:
+                - circles
   "/circles/{id}":
     put:
       summary: Updates a circle

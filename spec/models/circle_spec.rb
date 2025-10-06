@@ -61,4 +61,46 @@ RSpec.describe Circle, type: :model do
       expect(circle.errors[:base]).to include("Circle touches another circle or overlap")
     end
   end
+
+  context ".within_area" do
+    let!(:large_frame) { create(:frame, x: 0, y: 0, width: 20, height: 20) }
+    
+    let!(:circle_inside) { create(:circle, frame: large_frame, x: 1.0, y: 1.0, diameter: 1.0) }
+    let!(:circle_outside) { create(:circle, frame: large_frame, x: 8.0, y: 8.0, diameter: 1.0) }
+    let!(:circle_touching_boundary) { create(:circle, frame: large_frame, x: 4.0, y: 0.0, diameter: 2.0) }
+
+    it "returns circles completely within the search area" do
+      result = Circle.within_area(center_x: 0, center_y: 0, radius: 3)
+      
+      expect(result).to include(circle_inside)
+      expect(result).not_to include(circle_outside)
+    end
+
+    it "returns circles that touch the boundary of the search area" do
+      result = Circle.within_area(center_x: 0, center_y: 0, radius: 5)
+      
+      expect(result).to include(circle_touching_boundary)
+    end
+
+    it "returns empty result when no circles match" do
+      result = Circle.within_area(center_x: 100, center_y: 100, radius: 1)
+      
+      expect(result).to be_empty
+    end
+
+    it "handles zero radius search area" do
+      result = Circle.within_area(center_x: 1.0, center_y: 1.0, radius: 0)
+      
+      expect(result).to be_empty
+    end
+
+    it "works with decimal coordinates" do
+      separate_frame = create(:frame, x: 25, y: 25, width: 10, height: 10)
+      circle = create(:circle, frame: separate_frame, x: 27.0, y: 28.0, diameter: 1.0)
+      
+      result = Circle.within_area(center_x: 27.0, center_y: 28.0, radius: 2.0)
+      
+      expect(result).to include(circle)
+    end
+  end
 end

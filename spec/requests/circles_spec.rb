@@ -1,6 +1,54 @@
 require "swagger_helper"
 
 RSpec.describe "Circles API", type: :request do
+  path "/circles" do
+    get "Lists circles within a given radius" do
+      tags "Circles"
+      produces "application/json"
+      parameter name: :center_x, in: :query, type: :number, required: true, description: "X coordinate of the center point"
+      parameter name: :center_y, in: :query, type: :number, required: true, description: "Y coordinate of the center point"
+      parameter name: :radius, in: :query, type: :number, required: true, description: "Search radius in centimeters"
+      parameter name: :frame_id, in: :query, type: :integer, required: false, description: "Optional Frame ID to filter circles"
+
+      response "200", "list of circles returned" do
+        schema type: :object,
+          properties: {
+            circles: {
+              type: :array,
+              items: {
+                type: :object,
+                properties: {
+                  id: { type: :integer },
+                  x: { type: :string },
+                  y: { type: :string },
+                  diameter: { type: :string },
+                  frame_id: { type: :integer }
+                },
+                required: %w[id x y diameter frame_id]
+              }
+            }
+          },
+          required: [ "circles" ]
+
+        let!(:frame) { create(:frame) }
+        let!(:circle_inside) { create(:circle, x: 1.0, y: 1.0, diameter: 2.0, frame: frame) }
+        let!(:circle_outside) { create(:circle, x: 4.5, y: 4.5, diameter: 1.0, frame: frame) }
+
+        let(:center_x) { 0 }
+        let(:center_y) { 0 }
+        let(:radius) { 5 }
+        let(:frame_id) { frame.id }
+
+        run_test! do |response|
+          expect(response).to have_http_status(:ok)
+          circles = json_response[:circles]
+          expect(circles).to be_an(Array)
+          expect(circles.first[:id]).to eq(circle_inside.id)
+        end
+      end
+    end
+  end
+
   path "/circles/{id}" do
     put "Updates a circle" do
       consumes "application/json"

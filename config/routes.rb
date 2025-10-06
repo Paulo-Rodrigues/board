@@ -7,5 +7,5 @@ Rails.application.routes.draw do
     post "circles", to: "frames/circles#create"
   end
 
-  resources :circles, only: [ :update, :destroy ]
+  resources :circles, only: [ :index, :update, :destroy ]
 end
