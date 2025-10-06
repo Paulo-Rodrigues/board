@@ -98,3 +98,30 @@ The documentation includes:
 - Complete API reference
 - Request and response schemas
 - Error codes and messages
+
+## API Usage Examples
+
+### Create Frame with Circles
+
+```bash
+curl -X POST http://localhost:3000/frames \
+  -H "Content-Type: application/json" \
+  -d '{
+    "frame": {
+      "x": 5.0,
+      "y": 5.0,
+      "width": 10.0,
+      "height": 10.0,
+      "circles_attributes": [
+        {"x": 2.0, "y": 2.0, "diameter": 2.0}
+      ]
+    }
+  }'
+```
+
+Search Circles
+
+```bash
+curl "http://localhost:3000/circles?center_x=0&center_y=0&radius=5&frame_id=1"
+```
+
