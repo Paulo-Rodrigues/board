@@ -30,7 +30,7 @@ class CirclesController < ApplicationController
 
   def filtered_circles
     return [] unless valid_search_params?
-    
+
     scope.within_area(**search_params)
   end
 
@@ -51,8 +51,8 @@ class CirclesController < ApplicationController
   end
 
   def valid_search_params?
-    params[:center_x].present? && 
-    params[:center_y].present? && 
+    params[:center_x].present? &&
+    params[:center_y].present? &&
     params[:radius].present? &&
     params[:radius].to_f > 0
   end
