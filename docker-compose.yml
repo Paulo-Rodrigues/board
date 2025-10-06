@@ -1,0 +1,31 @@
+services:
+  board:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: board
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/board
+    depends_on:
+      - db
+    command: bash -lc "bundle exec rails db:prepare && bundle exec rails s -b 0.0.0.0 -p 3000"
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cartesian_space_development
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

@@ -1,0 +1,21 @@
+FROM ruby:3.4.4
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+  build-essential libpq-dev libyaml-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd --system --gid 1000 dev && useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash dev
+
+WORKDIR /board
+
+COPY Gemfile Gemfile.lock ./
+
+RUN bundle install
+
+COPY --chown=dev:dev . .
+
+USER dev
+
+EXPOSE 3000
+
+CMD [ "bundle", "exec", "rails", "s", "-b", "0.0.0.0", "-p", "3000" ]

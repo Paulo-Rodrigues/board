@@ -1,0 +1,335 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/circles/{id}":
+    put:
+      summary: Updates a circle
+      parameters:
+      - name: id
+        in: path
+        description: ID of the circle
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: circle updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  circle:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      x:
+                        type: string
+                      "y":
+                        type: string
+                      diameter:
+                        type: string
+                    required:
+                    - id
+                    - diameter
+                required:
+                - circle
+        '404':
+          description: circle not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                circle:
+                  type: object
+                  properties:
+                    x:
+                      type: string
+                    "y":
+                      type: string
+                    diameter:
+                      type: string
+    delete:
+      summary: Deletes a circle
+      parameters:
+      - name: id
+        in: path
+        description: ID of the circle
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: circle deleted
+        '404':
+          description: circle not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+  "/frames/{frame_id}/circles":
+    post:
+      summary: Creates a circle within a frame
+      parameters:
+      - name: frame_id
+        in: path
+        description: ID of the parent frame
+        required: true
+        schema:
+          type: integer
+      responses:
+        '201':
+          description: circle created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  frame:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      x:
+                        type: string
+                      "y":
+                        type: string
+                      width:
+                        type: string
+                      height:
+                        type: string
+                      circles:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            x:
+                              type: string
+                            "y":
+                              type: string
+                            diameter:
+                              type: string
+                          required:
+                          - id
+                          - x
+                          - "y"
+                          - diameter
+                    required:
+                    - id
+                required:
+                - frame
+        '422':
+          description: circle overlaps existing circle
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - errors
+        '404':
+          description: frame not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                circle:
+                  type: object
+                  properties:
+                    x:
+                      type: number
+                    "y":
+                      type: number
+                    diameter:
+                      type: number
+                  required:
+                  - x
+                  - "y"
+                  - diameter
+              required:
+              - circle
+  "/frames":
+    post:
+      summary: Creates a frame
+      parameters: []
+      responses:
+        '201':
+          description: frame created
+        '422':
+          description: invalid circle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                x:
+                  type: number
+                "y":
+                  type: number
+                width:
+                  type: number
+                height:
+                  type: number
+                circles_attributes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      x:
+                        type: number
+                      "y":
+                        type: number
+                      diameter:
+                        type: number
+                required:
+                - x
+                - "y"
+                - diameter
+              required:
+              - x
+              - "y"
+              - width
+              - height
+  "/frames/{id}":
+    get:
+      summary: Retrieves a frame
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: frame found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  frame:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      x:
+                        type: string
+                      "y":
+                        type: string
+                      width:
+                        type: string
+                      height:
+                        type: string
+                      total_circles:
+                        type: integer
+                      highest_circle:
+                        type: object
+                        nullable: true
+                        properties:
+                          id:
+                            type: string
+                          x:
+                            type: string
+                          "y":
+                            type: string
+                      lowest_circle:
+                        type: object
+                        nullable: true
+                        properties:
+                          id:
+                            type: string
+                          x:
+                            type: string
+                          "y":
+                            type: string
+                      leftmost_circle:
+                        type: object
+                        nullable: true
+                        properties:
+                          id:
+                            type: string
+                          x:
+                            type: string
+                          "y":
+                            type: string
+                      rightmost_circle:
+                        type: object
+                        nullable: true
+                        properties:
+                          id:
+                            type: string
+                          x:
+                            type: string
+                          "y":
+                            type: string
+                    required:
+                    - id
+                    - x
+                    - "y"
+                    - width
+                    - height
+                    - total_circles
+                required:
+                - frame
+        '404':
+          description: frame not found
+    delete:
+      summary: Deletes a frame
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: frame deleted
+        '422':
+          description: cannot delete frame with circles
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com
