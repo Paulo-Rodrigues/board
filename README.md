@@ -1,24 +1,100 @@
-# README
+# Board
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Board is a system for managing frames and associated circles, obeying specific geometric constraints and spacial limits.
 
-Things you may want to cover:
+The dimensions are defined in centimeters (cm) as decimals.
 
-* Ruby version
+## Overview
 
-* System dependencies
+Board consists of:
 
-* Configuration
+- **Frames**: Rectangular areas defined by center position (x, y), width, and height
+- **Circles**: Circular elements defined by center position (x, y) and diameter
+- All measurements are in centimeters with decimal precision
 
-* Database creation
+## Business Rules
 
-* Database initialization
+### Frame Constraints
 
-* How to run the test suite
+- Frames cannot touch or overlap other frames
+- Frame borders must maintain minimum separation
 
-* Services (job queues, cache servers, search engines, etc.)
+### Circle Constraints
 
-* Deployment instructions
+- Circles must fit completely within their parent frame
+- Circles cannot touch or overlap other circles within the same frame
+- Each circle must belong to an existing frame
 
-* ...
+## API Endpoints
+
+### Frames
+
+- `POST /frames` - Create a new frame (with optional nested circles)
+- `GET /frames/:id` - Get frame details with circle metrics
+- `DELETE /frames/:id` - Delete frame (only if no circles attached)
+
+### Circles
+
+- `POST /frames/:frame_id/circles` - Add circle to specific frame
+- `PUT /circles/:id` - Update circle position and diameter
+- `GET /circles?center_x=X&center_y=Y&radius=R&frame_id=ID` - Search circles within radius
+- `DELETE /circles/:id` - Remove a circle
+
+## Technical Stack
+
+- Ruby on Rails 8 (API-only mode)
+- PostgreSQL database
+- Docker & Docker Compose
+- RSpec for testing
+- Swagger/OpenAPI documentation with rswag
+
+## Prerequisites
+
+- Docker
+- Docker Compose
+
+## Quick Start
+
+### Development Environment
+
+Clone the repository and navigate into it, then run:
+
+```bash
+docker compose build
+docker compose up
+```
+
+### Accessing the Application
+
+- API: [localhost](http://localhost:3000)
+- API Documentation: [localhost/api-docs](http://localhost:3000/api-docs)
+
+If you need to run commands inside the container, use:
+
+```bash
+docker exec -it board_api bash
+```
+
+### Running Tests
+
+Run all tests with:
+
+```bash
+docker exec board_api rspec
+```
+
+To run a specific test file:
+
+```bash
+docker exec board_api rspec path/to/your_spec.rb
+```
+
+### API Documentation
+
+The api documentation is available at `/api-docs` endpoint, generated using Swagger/OpenAPI.
+
+The documentation includes:
+
+- Complete API reference
+- Request and response schemas
+- Error codes and messages
