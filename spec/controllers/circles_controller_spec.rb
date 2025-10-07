@@ -17,6 +17,18 @@ describe CirclesController, type: :controller do
       expect(json_response[:circles].first[:id]).to eq(circle_inside.id)
     end
 
+    it "returns circles from all frames when frame_id is not provided" do
+      frame1 = create(:frame, x: -15, y: -15, width: 8, height: 8)
+      frame2 = create(:frame, x: 45, y: 15, width: 8, height: 8)
+      circle1 = create(:circle, frame: frame1, x: -13.0, y: -13.0, diameter: 1.0)
+      circle2 = create(:circle, frame: frame2, x: 43.0, y: 17.0, diameter: 1.0)
+      get :index, params: { center_x: 15, center_y: 15, radius: 45 }
+
+      expect(response).to have_http_status(:ok)
+      circle_ids = json_response[:circles].map { |c| c[:id] }
+      expect(circle_ids).to include(circle1.id, circle2.id)
+    end
+
     it "does not return circles from other frames" do
       get :index, params: { frame_id: frame.id, center_x: 0, center_y: 0, radius: 5 }
 
